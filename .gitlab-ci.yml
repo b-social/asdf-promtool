@@ -20,7 +20,7 @@ include:
 test:
   stage: validate
   image:
-    name: registry.gitlab.com/gitlab-com/gl-infra/common-ci-tasks/renovate:v1.23.1
+    name: registry.gitlab.com/gitlab-com/gl-infra/common-ci-tasks/renovate:v1.24.0
     entrypoint: [""]
   needs: []
   script: |
