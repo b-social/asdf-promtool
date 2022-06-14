@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+__dirname="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # detect the tool name from the asdf plugin directory
 get_toolname() {
   if [[ -n ${OVERRIDE_TOOLNAME:-} ]]; then
@@ -12,30 +14,29 @@ get_toolname() {
   basename "$(dirname "${__dirname}")"
 }
 
-
 TOOL_NAME=$(get_toolname)
 TOOL_TEST="${TOOL_NAME} --version"
 case "$TOOL_NAME" in
-  "promtool")
-    GH_REPO="https://github.com/prometheus/prometheus"
-    ARTIFACT_NAME=prometheus
-    BINARY_NAME=promtool
-    ;;
-  "amtool")
-    GH_REPO="https://github.com/prometheus/alertmanager"
-    ARTIFACT_NAME=alertmanager
-    BINARY_NAME=amtool
-    ;;
-  "thanos")
-    GH_REPO="https://github.com/thanos-io/thanos"
-    ARTIFACT_NAME=thanos
-    BINARY_NAME=thanos
-    ;;
+"promtool")
+  GH_REPO="https://github.com/prometheus/prometheus"
+  ARTIFACT_NAME=prometheus
+  BINARY_NAME=promtool
+  ;;
+"amtool")
+  GH_REPO="https://github.com/prometheus/alertmanager"
+  ARTIFACT_NAME=alertmanager
+  BINARY_NAME=amtool
+  ;;
+"thanos")
+  GH_REPO="https://github.com/thanos-io/thanos"
+  ARTIFACT_NAME=thanos
+  BINARY_NAME=thanos
+  ;;
 
-  *)
-    echo "Unknown tool: $1"
-    exit 1
-    ;;
+*)
+  echo "Unknown tool: $1"
+  exit 1
+  ;;
 esac
 
 fail() {
