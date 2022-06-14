@@ -101,7 +101,9 @@ download_release() {
 
   echo "* Downloading $TOOL_NAME release $version..."
   if ! curl "${curl_opts[@]}" -o "$filename" -C - "$url"; then
-    if [[ operating_system == "darwin" ]] && [[ arch == "arm64" ]]; then
+    if [[ $operating_system == "darwin" ]] && [[ $arch == "arm64" ]]; then
+      echo -e "asdf-$TOOL_NAME: failing back to amd64 as Apple Silicon binary does not exist"
+
       # The tool doesn't (yet) have an Apple Silicon binary, fallback to amd64
       arch="amd64"
       url="$GH_REPO/releases/download/v${version}/${ARTIFACT_NAME}-${version}.${operating_system}-${arch}.tar.gz"
