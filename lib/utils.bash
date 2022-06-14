@@ -100,7 +100,16 @@ download_release() {
   url="$GH_REPO/releases/download/v${version}/${ARTIFACT_NAME}-${version}.${operating_system}-${arch}.tar.gz"
 
   echo "* Downloading $TOOL_NAME release $version..."
-  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+  if ! curl "${curl_opts[@]}" -o "$filename" -C - "$url"; then
+    if [[ operating_system == "darwin" ]] && [[ arch == "arm64" ]]; then
+      # The tool doesn't (yet) have an Apple Silicon binary, fallback to amd64
+      arch="amd64"
+      url="$GH_REPO/releases/download/v${version}/${ARTIFACT_NAME}-${version}.${operating_system}-${arch}.tar.gz"
+      curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url after fallback from arm64 to amd64"
+    else
+      fail "Could not download $url"
+    fi
+  fi
 }
 
 install_version() {
