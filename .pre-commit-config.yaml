@@ -1,6 +1,8 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 ---
+# Use exclude to exclude specific files
+# exclude: '^fixtures/'
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.2.0
@@ -13,20 +15,25 @@ repos:
       - id: check-json
       - id: detect-private-key
       - id: mixed-line-ending
-        args: ['--fix=lf']
+        args: ["--fix=lf"]
       - id: no-commit-to-branch
         args: [--branch, main]
       - id: pretty-format-json
         args: [--autofix, --no-sort-keys]
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v1.3.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
   - repo: local
     hooks:
-    -   id: shellcheck
+      - id: shellcheck
         name: shellcheck
         entry: shellcheck -P . -P ./test/ -P ./test/lib/ -P ./test/integration/ -x
         language: system
         files: '^(.*\.sh|bin/[^\.]*)$'
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.4.3-1 # Note: keep this in sync with .tool-versions
+    rev: v3.5.0-1  # Note: keep this in sync with .tool-versions
     hooks:
       - id: shfmt
         args: [-w, -s, -i, "2"]

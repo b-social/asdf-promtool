@@ -2,9 +2,41 @@
 
 set -euo pipefail
 
-GH_REPO="https://github.com/prometheus/prometheus"
-TOOL_NAME="promtool"
-TOOL_TEST="promtool --version"
+# detect the tool name from the asdf plugin directory
+get_toolname() {
+  if [[ -n ${OVERRIDE_TOOLNAME:-} ]]; then
+    echo "${OVERRIDE_TOOLNAME}"
+    return
+  fi
+
+  basename "$(dirname "${__dirname}")"
+}
+
+
+TOOL_NAME=$(get_toolname)
+TOOL_TEST="${TOOL_NAME} --version"
+case "$TOOL_NAME" in
+  "promtool")
+    GH_REPO="https://github.com/prometheus/prometheus"
+    ARTIFACT_NAME=prometheus
+    BINARY_NAME=promtool
+    ;;
+  "amtool")
+    GH_REPO="https://github.com/prometheus/alertmanager"
+    ARTIFACT_NAME=alertmanager
+    BINARY_NAME=amtool
+    ;;
+  "thanos")
+    GH_REPO="https://github.com/thanos-io/thanos"
+    ARTIFACT_NAME=thanos
+    BINARY_NAME=thanos
+    ;;
+
+  *)
+    echo "Unknown tool: $1"
+    exit 1
+    ;;
+esac
 
 fail() {
   echo -e "asdf-$TOOL_NAME: $*"
@@ -39,32 +71,32 @@ download_release() {
   filename="$2"
 
   case "$OSTYPE" in
-    "linux-gnu"*) operating_system="linux";;
-    "darwin"*) operating_system="darwin";;
+  "linux-gnu"*) operating_system="linux" ;;
+  "darwin"*) operating_system="darwin" ;;
 
-    *)
-      echo "Unknown os: OSTYPE"
-      exit 1
-      ;;
+  *)
+    echo "Unknown os: OSTYPE"
+    exit 1
+    ;;
   esac
 
   case "$(uname -m)" in
-    arm64) arch="arm64";;
-    aarch64_be) arch="arm64";;
-    aarch64) arch="arm64";;
-    armv8b) arch="arm64";;
-    armv8l) arch="arm64";;
-    i386) arch="386" ;;
-    i686) arch="386" ;;
-    x86_64) arch="amd64" ;;
+  arm64) arch="arm64" ;;
+  aarch64_be) arch="arm64" ;;
+  aarch64) arch="arm64" ;;
+  armv8b) arch="arm64" ;;
+  armv8l) arch="arm64" ;;
+  i386) arch="386" ;;
+  i686) arch="386" ;;
+  x86_64) arch="amd64" ;;
 
-    *)
-      echo "Unknown architecture: $(uname -m)"
-      exit 1
-      ;;
+  *)
+    echo "Unknown architecture: $(uname -m)"
+    exit 1
+    ;;
   esac
 
-  url="$GH_REPO/releases/download/v${version}/prometheus-${version}.${operating_system}-${arch}.tar.gz"
+  url="$GH_REPO/releases/download/v${version}/${ARTIFACT_NAME}-${version}.${operating_system}-${arch}.tar.gz"
 
   echo "* Downloading $TOOL_NAME release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -81,9 +113,9 @@ install_version() {
 
   (
     mkdir -p "$install_path/bin"
-    cp "$ASDF_DOWNLOAD_PATH"/promtool "$install_path/bin"
+    cp "$ASDF_DOWNLOAD_PATH"/${BINARY_NAME} "$install_path/bin"
 
-    test -x "$install_path/bin/promtool" || fail "Expected $install_path/bin/promtool to be executable."
+    test -x "$install_path/bin/${BINARY_NAME}" || fail "Expected $install_path/bin/${BINARY_NAME} to be executable."
 
     echo "$TOOL_NAME $version installation was successful!"
   ) || (
