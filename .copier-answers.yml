@@ -1,0 +1,10 @@
+# This project was initially generated with
+# https://gitlab.com/gitlab-com/gl-infra/common-template-copier
+# See the project for instructions on how to update the project
+#
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.1.0
+_src_path: https://gitlab.com/gitlab-com/gl-infra/common-template-copier.git
+golang: false
+initial_codeowners: "@andrewn"
+project_name: asdf-promtool

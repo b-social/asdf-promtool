@@ -1,8 +1,8 @@
 # asdf-promtool
 
-[promtool](https://github.com/prometheus/prometheus) plugin for the [asdf version manager](https://asdf-vm.com).
+[promtool](https://github.com/prometheus/prometheus), [amtool](https://github.com/prometheus/alertmanager) and [thanos](https://github.com/thanos-io/thanos) plugin for the [asdf version manager](https://asdf-vm.com).
 
-# Contents
+## Contents
 
 - [Dependencies](#dependencies)
 - [Install](#install)
@@ -10,34 +10,42 @@
 - [Contributing](#contributing)
 - [License](#license)
 
-# Dependencies
+## Dependencies
 
 - `bash`, `curl`, `tar`: generic POSIX utilities.
 
-# Install
+## Install
 
 Plugin:
 
 ```shell
-asdf plugin add promtool
-# or
 asdf plugin add promtool https://gitlab.com/gitlab-com/gl-infra/asdf-promtool.git
+asdf plugin add amtool https://gitlab.com/gitlab-com/gl-infra/asdf-promtool.git
+asdf plugin add thanos https://gitlab.com/gitlab-com/gl-infra/asdf-promtool.git
 ```
 
-promtool:
+## Using the plugin:
 
 ```shell
 # Show all installable versions
 asdf list-all promtool
+asdf list-all amtool
+asdf list-all thanos
 
 # Install specific version
 asdf install promtool latest
+asdf install amtool latest
+asdf install thanos latest
 
 # Set a version globally (on your ~/.tool-versions file)
 asdf global promtool latest
+asdf global amtool latest
+asdf global thanos latest
 
 # Now promtool commands are available
 promtool --version
+amtool --version
+thanos --version
 ```
 
 Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to
