@@ -7,7 +7,7 @@ IFS=$'\n\t'
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-export LC_COLLATE=C
+export LANG=C LC_ALL=C
 
 generate() {
   sort "${ROOT_DIR}/.tool-versions" |

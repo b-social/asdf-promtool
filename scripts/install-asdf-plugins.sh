@@ -5,29 +5,48 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-plugin_list=$(asdf plugin list || echo "")
-
 # shellcheck source=/dev/null
 source "$ASDF_DIR/asdf.sh"
 
+plugin_list=$(asdf plugin list || echo)
+
 install_plugin() {
-  plugin=$1
-  if ! echo "$plugin_list" | grep -q "${plugin}" >/dev/null; then
+  local plugin=$1
+
+  if ! echo "${plugin_list}" | grep -q "${plugin}"; then
     echo "# Installing plugin" "$@"
     asdf plugin add "$@" || {
-      echo "Failed to perform plugin installation: " "$@"
+      echo "Failed to install plugin:" "$@"
       exit 1
-    }
+    } >&2
   fi
 
   echo "# Installing ${plugin} version"
   asdf install "${plugin}" || {
-    echo "Failed to perform version installation: ${plugin}"
+    echo "Failed to install plugin version: ${plugin}"
     exit 1
-  }
+  } >&2
 
   # Use this plugin for the rest of the install-asdf-plugins.sh script...
   asdf shell "${plugin}" "$(asdf current "${plugin}" | awk '{print $2}')"
+}
+
+remove_plugin_with_source() {
+  local plugin=$1
+  local source=$2
+
+  if ! asdf plugin list --urls | grep -qF "${source}"; then
+    return
+  fi
+
+  echo "# Removing plugin ${plugin} installed from ${source}"
+  asdf plugin remove "${plugin}" || {
+    echo "Failed to remove plugin: ${plugin}"
+    exit 1
+  } >&2
+
+  # Refresh list of installed plugins.
+  plugin_list=$(asdf plugin list)
 }
 
 install_plugin pre-commit
