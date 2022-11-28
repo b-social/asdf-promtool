@@ -1,5 +1,5 @@
 # Note: Install plugins by running scripts/install-asdf-plugins.sh
-pre-commit 2.18.0 # datasource=github-releases depName=pre-commit/pre-commit
+pre-commit 2.20.0 # datasource=github-releases depName=pre-commit/pre-commit
 shellcheck 0.8.0 # datasource=github-releases depName=koalaman/shellcheck
 shfmt 3.4.3 # datasource=github-releases depName=mvdan/sh
 python system
