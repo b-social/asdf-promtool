@@ -20,7 +20,7 @@ warn() {
 }
 
 # check that asdf is installed
-[[ -n ${ASDF_DIR:-} ]] || {
+[[ -n ${ASDF_DIR-} ]] || {
   warn "asdf not installed. "
   exit 1
 }

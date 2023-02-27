@@ -6,7 +6,7 @@ __dirname="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # detect the tool name from the asdf plugin directory
 get_toolname() {
-  if [[ -n ${OVERRIDE_TOOLNAME:-} ]]; then
+  if [[ -n ${OVERRIDE_TOOLNAME-} ]]; then
     echo "${OVERRIDE_TOOLNAME}"
     return
   fi
@@ -46,7 +46,7 @@ fail() {
 curl_opts=(-fsSL)
 
 # NOTE: You might want to remove this if promtool is not hosted on GitHub releases.
-if [ -n "${GITHUB_API_TOKEN:-}" ]; then
+if [ -n "${GITHUB_API_TOKEN-}" ]; then
   curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
 
