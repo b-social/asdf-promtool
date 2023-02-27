@@ -15,7 +15,6 @@ get_toolname() {
 }
 
 TOOL_NAME=$(get_toolname)
-TOOL_TEST="${TOOL_NAME} --version"
 case "$TOOL_NAME" in
 "promtool")
   GH_REPO="https://github.com/prometheus/prometheus"
